@@ -28,28 +28,33 @@ function App() {
     )
       return;
 
-    // console.log("from ", source);
-    // console.log("to ", destination);
+    console.log("from ", source);
+    console.log("to ", destination);
 
-    // Find out which column the user drag item
-    Object.keys(state).forEach(async (el) => {
-      let column = state[el];
-
-      if (column.id === source.droppableId) {
-        const itemList = Array.from(column.items);
-        itemList.splice(source.index, 1);
-        itemList.splice(destination.index, 0, column.items[source.index]);
-        let newObj = state;
-        // Object.keys(state).forEach((el) => {
-        //   if (state[el].id !== column.id) {
-        //     newObj[el] = state[el];
-        //   } else {
-        //     newObj[el] = state[el];
-        //     newObj[el].items = itemList;
-        //   }
-        // });
-        console.log(newObj);
+    // Copy item for adding later
+    let itemCopy = {};
+    Object.keys(state).forEach((el) => {
+      if (state[el].id === source.droppableId) {
+        itemCopy = state[el].items[source.index];
       }
+    });
+    console.log(itemCopy);
+
+    setState((prev) => {
+      // Remove Item when user drag away
+      Object.keys(prev).forEach((el) =>
+        prev[el].id === source.droppableId
+          ? prev[el].items.splice(source.index, 1)
+          : el
+      );
+
+      // Add Item into droppable column
+      Object.keys(prev).map((el) =>
+        prev[el].id === destination.droppableId
+          ? prev[el].items.splice(destination.index, 0, itemCopy)
+          : el
+      );
+      return prev;
     });
   };
 
