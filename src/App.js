@@ -1,17 +1,12 @@
 import React, { useState } from "react";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
-import { itemsTodo, itemsInProgress, itemsCompleted } from "./data";
+import { DragDropContext } from "react-beautiful-dnd";
+import { itemsInProgress, itemsCompleted } from "./data";
 import { v4 } from "uuid";
 import "./App.css";
+import Board from "./components/Board";
 
 function App() {
   const [state, setState] = useState({
-    todo: {
-      id: v4(),
-      title: "Todo",
-      items: itemsTodo,
-    },
-
     "in-progress": {
       id: v4(),
       title: "In Progress",
@@ -33,60 +28,40 @@ function App() {
     )
       return;
 
-    const itemm = Array.from(itemsTodo);
-    console.log(itemm.source);
-    console.log("from ", source);
-    console.log("to ", destination);
+    // console.log("from ", source);
+    // console.log("to ", destination);
+
+    // Find out which column the user drag item
+    Object.keys(state).forEach(async (el) => {
+      let column = state[el];
+
+      if (column.id === source.droppableId) {
+        const itemList = Array.from(column.items);
+        itemList.splice(source.index, 1);
+        itemList.splice(destination.index, 0, column.items[source.index]);
+        let newObj = state;
+        // Object.keys(state).forEach((el) => {
+        //   if (state[el].id !== column.id) {
+        //     newObj[el] = state[el];
+        //   } else {
+        //     newObj[el] = state[el];
+        //     newObj[el].items = itemList;
+        //   }
+        // });
+        console.log(newObj);
+      }
+    });
   };
 
   return (
     <div className="App">
       <DragDropContext onDragEnd={onDragEnd}>
         {/*  ['todo', 'in-progress', 'done']  */}
-        {Object.keys(state).map((data, index) => {
-          return (
-            // Return the column for each tag
-            <div key={index} className="column">
-              <h4>{state[data].title}</h4>
-              <Droppable droppableId={state[data].id}>
-                {(provided) => {
-                  return (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      className="droppable-col"
-                    >
-                      {provided.placeholder}
-                      {/* Get values of item  */}
-                      {state[data].items.map((el, index) => {
-                        return (
-                          <Draggable
-                            key={el.id}
-                            index={index}
-                            draggableId={el.id}
-                          >
-                            {(provided) => {
-                              return (
-                                <div
-                                  ref={provided.innerRef}
-                                  {...provided.draggableProps}
-                                  {...provided.dragHandleProps}
-                                  className="droppable-item"
-                                >
-                                  {el.name}
-                                </div>
-                              );
-                            }}
-                          </Draggable>
-                        );
-                      })}
-                    </div>
-                  );
-                }}
-              </Droppable>
-            </div>
-          );
-        })}
+        {Object.keys(state).map((data, index) => (
+          <div key={index} className="column">
+            <Board data={state[data]} />
+          </div>
+        ))}
       </DragDropContext>
     </div>
   );

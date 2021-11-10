@@ -1,6 +1,6 @@
 import { v4 } from "uuid";
 
-export const itemsTodo = [
+export const itemsInProgress = [
   {
     id: v4(),
     name: "Clean the house",
@@ -15,5 +15,9 @@ export const itemsTodo = [
   },
 ];
 
-export const itemsInProgress = [];
-export const itemsCompleted = [];
+export const itemsCompleted = [
+  {
+    id: v4(),
+    name: "Sing a song",
+  },
+];

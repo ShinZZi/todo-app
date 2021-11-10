@@ -22,11 +22,11 @@ body {
 }
 
 .App .column {
-  flex: 1;
-  height: 100vh;
+  width: 30rem;
+  margin-left: 5rem;
   display: flex;
   flex-direction: column;
-  padding: 2rem 2rem;
+  padding: 1rem 0;
 }
 
 .App .column h4 {
@@ -35,17 +35,17 @@ body {
 }
 
 .App .column .droppable-col {
+  height: 100%;
   background: gray;
-  padding: 1.5rem 2rem;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 }
 
 .App .column .droppable-col .droppable-item {
   color: #fff;
-  margin-bottom: 1rem;
+  margin-bottom: 1.3rem;
   border: 1px solid #fff;
-  padding: 0.5rem 1rem;
-}
-
-.App .column .droppable-col .droppable-item:last-child {
-  margin-bottom: 0;
+  padding: 1rem 1rem;
 }
