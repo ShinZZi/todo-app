@@ -41,6 +41,19 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
+  overflow-y: scroll;
+}
+
+.App .column .droppable-col::-webkit-scrollbar {
+  width: 1rem;
+}
+
+.App .column .droppable-col::-webkit-scrollbar-track {
+  background: #595959;
+}
+
+.App .column .droppable-col::-webkit-scrollbar-thumb {
+  background: #ccc;
 }
 
 .App .column .droppable-col .droppable-item {
@@ -48,4 +61,40 @@ body {
   margin-bottom: 1.3rem;
   border: 1px solid #fff;
   padding: 1rem 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.App .column .droppable-col .droppable-item input[type="checkbox"] {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #fff;
+  margin: 0;
+  width: 1.8rem;
+  aspect-ratio: 1/1;
+  border-radius: 0.25rem;
+  display: grid;
+  place-content: center;
+}
+
+.App .column .droppable-col .droppable-item input[type="checkbox"]::before {
+  content: "";
+  width: 1.2rem;
+  aspect-ratio: 1/1;
+  transform: scale(1);
+  transition: 120ms transform ease-in-out;
+}
+
+.App
+  .column
+  .droppable-col
+  .droppable-item
+  input[type="checkbox"]:checked::before {
+  transform: scale(1);
+  background: #1976d2;
+}
+
+.App .column .droppable-col .droppable-item .icon {
+  font-size: 2rem;
 }

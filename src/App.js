@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { itemsInProgress, itemsCompleted } from "./data";
+import { itemsInProgress, itemsCompleted, itemsTest } from "./data";
 import { v4 } from "uuid";
 import "./App.css";
 import Board from "./components/Board";
@@ -17,6 +17,11 @@ function App() {
       id: v4(),
       title: "Complete",
       items: itemsCompleted,
+    },
+    test: {
+      id: v4(),
+      title: "Test",
+      items: itemsTest,
     },
   });
 
@@ -38,7 +43,6 @@ function App() {
         itemCopy = state[el].items[source.index];
       }
     });
-    console.log(itemCopy);
 
     setState((prev) => {
       // Remove Item when user drag away

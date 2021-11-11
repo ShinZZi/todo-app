@@ -12,10 +12,13 @@ function Card(props) {
             <div
               ref={provided.innerRef}
               {...provided.draggableProps}
-              {...provided.dragHandleProps}
               className="droppable-item"
             >
-              {item.name}
+              <input type="checkbox" name="completed" />
+              {item.name}{" "}
+              <span {...provided.dragHandleProps}>
+                <i class="fas fa-bars icon"></i>
+              </span>
             </div>
           );
         }}
