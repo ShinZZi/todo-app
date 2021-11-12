@@ -1,23 +1,26 @@
 import React from "react";
 import { Droppable } from "react-beautiful-dnd";
-import Card from "./Card";
+import Task from "../Task/Task";
+import "./Card.css";
 
-function Board(props) {
+function Card(props) {
   const { data } = props;
   return (
     <>
-      <h4>{data.title}</h4>
+      <div className="card-title">
+        <h2>{data.title}</h2>
+      </div>
       <Droppable droppableId={data.id}>
         {(provided) => {
           return (
             <div
-              className="droppable-col"
+              className="card-body"
               ref={provided.innerRef}
               {...provided.droppableProps}
             >
               {data.items.map((item, index) => (
-                <div key={index}>
-                  <Card item={item} index={index} />
+                <div key={index} className="card-task">
+                  <Task item={item} index={index} />
                 </div>
               ))}
               {provided.placeholder}
@@ -29,4 +32,4 @@ function Board(props) {
   );
 }
 
-export default Board;
+export default Card;

@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { itemsInProgress, itemsCompleted, itemsTest } from "./data";
 import { v4 } from "uuid";
 import "./App.css";
-import Board from "./components/Board";
+import Header from "./components/Header/Header";
+import Card from "./components/Card/Card";
+import { itemsCompleted, itemsInProgress, itemsTest } from "./data";
 
 function App() {
   const [state, setState] = useState({
@@ -12,16 +13,15 @@ function App() {
       title: "In Progress",
       items: itemsInProgress,
     },
-
-    done: {
-      id: v4(),
-      title: "Complete",
-      items: itemsCompleted,
-    },
     test: {
       id: v4(),
       title: "Test",
       items: itemsTest,
+    },
+    done: {
+      id: v4(),
+      title: "Completed",
+      items: itemsCompleted,
     },
   });
 
@@ -64,14 +64,17 @@ function App() {
 
   return (
     <div className="App">
-      <DragDropContext onDragEnd={onDragEnd}>
-        {/*  ['todo', 'in-progress', 'done']  */}
-        {Object.keys(state).map((data, index) => (
-          <div key={index} className="column">
-            <Board data={state[data]} />
-          </div>
-        ))}
-      </DragDropContext>
+      <Header />
+      <div className="content">
+        <DragDropContext onDragEnd={onDragEnd}>
+          {/*  ['todo', 'in-progress', 'done']  */}
+          {Object.keys(state).map((data, index) => (
+            <div key={index} className="card">
+              <Card data={state[data]} />
+            </div>
+          ))}
+        </DragDropContext>
+      </div>
     </div>
   );
 }

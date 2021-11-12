@@ -1,0 +1,18 @@
+.task-content {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 0 2rem;
+  height: 5rem;
+}
+
+.clearfix {
+  height: 1.8rem;
+  width: 100%;
+}

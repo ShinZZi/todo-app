@@ -1,100 +1,37 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
-
+@import url("https://fonts.googleapis.com/css2?family=Courgette&family=Poppins:ital,wght@0,400;0,500;0,600;0,700;0,800;0,900;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
 * {
   margin: 0;
   padding: 0;
+  -webkit-box-sizing: border-box;
   box-sizing: border-box;
   font-family: "Poppins", sans-serif;
 }
 
 html,
 body {
-  max-height: 100vh;
-  min-width: 100%;
   font-size: 62.5%;
 }
 
 .App {
+  font-size: 1.6rem;
+  min-height: 100vh;
   height: 100vh;
   width: 100%;
-  font-size: 1.6rem;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-}
-
-.App .column {
-  width: 30rem;
-  margin-left: 5rem;
-  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
   flex-direction: column;
-  padding: 1rem 0;
+  position: relative;
 }
-
-.App .column h4 {
-  margin-bottom: 1rem;
-  width: 100%;
-}
-
-.App .column .droppable-col {
+.App .content {
   height: 100%;
-  background: gray;
-  padding: 1rem;
+  background: #efefef;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  overflow-y: scroll;
-}
-
-.App .column .droppable-col::-webkit-scrollbar {
-  width: 1rem;
-}
-
-.App .column .droppable-col::-webkit-scrollbar-track {
-  background: #595959;
-}
-
-.App .column .droppable-col::-webkit-scrollbar-thumb {
-  background: #ccc;
-}
-
-.App .column .droppable-col .droppable-item {
-  color: #fff;
-  margin-bottom: 1.3rem;
-  border: 1px solid #fff;
-  padding: 1rem 1rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.App .column .droppable-col .droppable-item input[type="checkbox"] {
-  -webkit-appearance: none;
-  appearance: none;
-  background: #fff;
-  margin: 0;
-  width: 1.8rem;
-  aspect-ratio: 1/1;
-  border-radius: 0.25rem;
-  display: grid;
-  place-content: center;
-}
-
-.App .column .droppable-col .droppable-item input[type="checkbox"]::before {
-  content: "";
-  width: 1.2rem;
-  aspect-ratio: 1/1;
-  transform: scale(1);
-  transition: 120ms transform ease-in-out;
-}
-
-.App
-  .column
-  .droppable-col
-  .droppable-item
-  input[type="checkbox"]:checked::before {
-  transform: scale(1);
-  background: #1976d2;
-}
-
-.App .column .droppable-col .droppable-item .icon {
-  font-size: 2rem;
+  overflow-x: auto;
+  padding: 2.5rem 0 2.5rem 2.5rem;
 }
