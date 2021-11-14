@@ -1,31 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
-import { v4 } from "uuid";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Card from "./components/Card/Card";
-import { itemsCompleted, itemsInProgress, itemsTest } from "./data";
+import { getCard, addTaskToCard } from "./services/taskService";
 
 function App() {
-  const [state, setState] = useState({
-    "in-progress": {
-      id: v4(),
-      title: "In Progress",
-      items: itemsInProgress,
-    },
-    test: {
-      id: v4(),
-      title: "Test",
-      items: itemsTest,
-    },
-    done: {
-      id: v4(),
-      title: "Completed",
-      items: itemsCompleted,
-    },
-  });
+  const [card, setCard] = useState([]);
+  const [source, setSource] = useState(null);
+  const [destination, setDestination] = useState(null);
+  const [itemCopy, setItemCopy] = useState({});
+  const [checkCopy, setCheckCopy] = useState(false);
 
-  const onDragEnd = ({ destination, source }) => {
+  // FETCH CARD DATA WHEN RENDER VIEW
+  useEffect(() => {
+    getCard().then((response) => {
+      setCard(response.map((el) => el));
+    });
+  }, []);
+
+  // GET COPY ITEM FOR DELETING AND ADDING
+  useEffect(() => {
+    if (checkCopy === true) {
+      addTaskToCard(itemCopy, destination);
+    }
+    // eslint-disable-next-line
+  }, [checkCopy]);
+
+  const onDragEnd = async ({ destination, source }) => {
     if (!destination) return;
     if (
       destination.index === source.index &&
@@ -34,32 +36,26 @@ function App() {
       return;
 
     console.log("from ", source);
+    setSource(source);
     console.log("to ", destination);
+    setDestination(destination);
 
-    // Copy item for adding later
-    let itemCopy = {};
-    Object.keys(state).forEach((el) => {
-      if (state[el].id === source.droppableId) {
-        itemCopy = state[el].items[source.index];
-      }
-    });
+    // setCard((prev) => {
+    //   // Remove Item when user drag away
+    //   prev.forEach(async (el) => {
+    //     if (el.id === source.droppableId) {
+    //       el.items.splice(source.index, 1);
+    //     }
+    //   });
 
-    setState((prev) => {
-      // Remove Item when user drag away
-      Object.keys(prev).forEach((el) =>
-        prev[el].id === source.droppableId
-          ? prev[el].items.splice(source.index, 1)
-          : el
-      );
-
-      // Add Item into droppable column
-      Object.keys(prev).map((el) =>
-        prev[el].id === destination.droppableId
-          ? prev[el].items.splice(destination.index, 0, itemCopy)
-          : el
-      );
-      return prev;
-    });
+    //   // Add Item into droppable column
+    //   prev.forEach((el) => {
+    //     if (el.id === destination.droppableId) {
+    //       el.items.splice(destination.index, 0, itemCopy);
+    //     }
+    //   });
+    //   return prev;
+    // });
   };
 
   return (
@@ -67,10 +63,16 @@ function App() {
       <Header />
       <div className="content">
         <DragDropContext onDragEnd={onDragEnd}>
-          {/*  ['todo', 'in-progress', 'done']  */}
-          {Object.keys(state).map((data, index) => (
+          {/* {console.log("card: ", card)} */}
+          {card.map((data, index) => (
             <div key={index} className="card">
-              <Card data={state[data]} />
+              <Card
+                getItemCopy={(item) => setItemCopy(item)}
+                card={data}
+                source={source}
+                destination={destination}
+                setCheckCopy={(item) => setCheckCopy(item)}
+              />
             </div>
           ))}
         </DragDropContext>

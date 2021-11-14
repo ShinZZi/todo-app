@@ -4,6 +4,7 @@ import "./Task.css";
 
 function Task(props) {
   const { item, index } = props;
+  // console.log(item);
   return (
     <>
       <Draggable key={item.id} index={index} draggableId={item.id}>
