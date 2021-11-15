@@ -4,11 +4,10 @@ import "./Task.css";
 
 function Task(props) {
   const { item, index } = props;
-  // console.log(item);
   return (
     <>
       <Draggable key={item.id} index={index} draggableId={item.id}>
-        {(provided, snapshot) => {
+        {(provided) => {
           return (
             <div ref={provided.innerRef} {...provided.draggableProps}>
               <div className="task-content border">

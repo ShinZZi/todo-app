@@ -3,29 +3,25 @@ import { DragDropContext } from "react-beautiful-dnd";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Card from "./components/Card/Card";
-import { getCard, addTaskToCard } from "./services/taskService";
+import { TaskService } from "./services/taskService";
+import { CardService } from "./services/cardService";
 
 function App() {
-  const [card, setCard] = useState([]);
-  const [source, setSource] = useState(null);
-  const [destination, setDestination] = useState(null);
-  const [itemCopy, setItemCopy] = useState({});
-  const [checkCopy, setCheckCopy] = useState(false);
+  const [data, setData] = useState([]);
 
-  // FETCH CARD DATA WHEN RENDER VIEW
+  // GET DATA WHEN RENDER VIEW
   useEffect(() => {
-    getCard().then((response) => {
-      setCard(response.map((el) => el));
+    CardService.getCard().then((response) => {
+      setData(
+        response.map((el) => {
+          TaskService.getTaskInCard(el.id).then((task) => {
+            el["items"] = task;
+          });
+          return el;
+        })
+      );
     });
   }, []);
-
-  // GET COPY ITEM FOR DELETING AND ADDING
-  useEffect(() => {
-    if (checkCopy === true) {
-      addTaskToCard(itemCopy, destination);
-    }
-    // eslint-disable-next-line
-  }, [checkCopy]);
 
   const onDragEnd = async ({ destination, source }) => {
     if (!destination) return;
@@ -36,26 +32,32 @@ function App() {
       return;
 
     console.log("from ", source);
-    setSource(source);
     console.log("to ", destination);
-    setDestination(destination);
 
-    // setCard((prev) => {
-    //   // Remove Item when user drag away
-    //   prev.forEach(async (el) => {
-    //     if (el.id === source.droppableId) {
-    //       el.items.splice(source.index, 1);
-    //     }
-    //   });
+    // Copy item for adding later
+    let itemCopy = {};
+    data.forEach((el) => {
+      if (el.id === source.droppableId) {
+        itemCopy = el.items[source.index];
+      }
+    });
 
-    //   // Add Item into droppable column
-    //   prev.forEach((el) => {
-    //     if (el.id === destination.droppableId) {
-    //       el.items.splice(destination.index, 0, itemCopy);
-    //     }
-    //   });
-    //   return prev;
-    // });
+    setData((prev) => {
+      // Remove Item when user drag away
+      prev.forEach(async (el) => {
+        if (el.id === source.droppableId) {
+          el.items.splice(source.index, 1);
+        }
+      });
+
+      // Add Item into droppable column
+      prev.forEach((el) => {
+        if (el.id === destination.droppableId) {
+          el.items.splice(destination.index, 0, itemCopy);
+        }
+      });
+      return prev;
+    });
   };
 
   return (
@@ -64,15 +66,9 @@ function App() {
       <div className="content">
         <DragDropContext onDragEnd={onDragEnd}>
           {/* {console.log("card: ", card)} */}
-          {card.map((data, index) => (
+          {data.map((data, index) => (
             <div key={index} className="card">
-              <Card
-                getItemCopy={(item) => setItemCopy(item)}
-                card={data}
-                source={source}
-                destination={destination}
-                setCheckCopy={(item) => setCheckCopy(item)}
-              />
+              <Card data={data} />
             </div>
           ))}
         </DragDropContext>
