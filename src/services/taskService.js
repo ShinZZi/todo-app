@@ -6,10 +6,16 @@ export const TaskService = {
     return tasks.data;
   },
 
-  updateTaskInCard: async (item, destination) => {
-    await axios.put(`http://127.0.0.1:9999/task/card/${item.id}`, {
-      card_id: destination.droppableId,
-    });
+  updateTask: async (item, index, destination) => {
+    let response = await axios.put(
+      `http://127.0.0.1:9999/task/update/${item.id}`,
+      {
+        card_id: destination.droppableId,
+        index: index,
+        name: item.name,
+      }
+    );
+    return response;
   },
 
   deleteTask: async (id) => {

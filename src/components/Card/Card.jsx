@@ -3,13 +3,14 @@ import { Droppable } from "react-beautiful-dnd";
 import Task from "../Task/Task";
 import "./Card.css";
 import { CircularProgress, Box } from "@mui/material";
+import { TaskService } from "../../services/taskService";
 
 function Card(props) {
-  const { data } = props;
+  const { data, destination, source } = props;
   const [card, setCard] = useState([]);
 
   useEffect(() => {
-    var intervalID = setInterval(() => {
+    let intervalID = setInterval(() => {
       if (data.items !== undefined) {
         setCard(data);
         clearInterval(intervalID);
@@ -17,6 +18,24 @@ function Card(props) {
     }, 1000);
     // eslint-disable-next-line
   }, [data]);
+
+  useEffect(() => {
+    if (destination !== null && data.items !== undefined) {
+      if (card.id === source.droppableId) {
+        card.items.map((item, index) => {
+          TaskService.updateTask(item, index, source);
+          return item;
+        });
+      }
+
+      if (card.id === destination.droppableId) {
+        card.items.map((item, index) => {
+          TaskService.updateTask(item, index, destination).then();
+          return item;
+        });
+      }
+    }
+  }, [data.items, card, source, destination]);
 
   return (
     <>
@@ -44,7 +63,7 @@ function Card(props) {
         </Droppable>
       ) : (
         <Box sx={{ display: "flex", margin: "auto" }}>
-          <CircularProgress color="#2c3e50" />
+          <CircularProgress color="inherit" />
         </Box>
       )}
     </>

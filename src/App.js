@@ -8,6 +8,8 @@ import { CardService } from "./services/cardService";
 
 function App() {
   const [data, setData] = useState([]);
+  const [source, setSource] = useState(null);
+  const [destination, setDestination] = useState(null);
 
   // GET DATA WHEN RENDER VIEW
   useEffect(() => {
@@ -58,6 +60,8 @@ function App() {
       });
       return prev;
     });
+    setSource(source);
+    setDestination(destination);
   };
 
   return (
@@ -65,10 +69,10 @@ function App() {
       <Header />
       <div className="content">
         <DragDropContext onDragEnd={onDragEnd}>
-          {/* {console.log("card: ", card)} */}
+          {/* {console.log("data: ", data)} */}
           {data.map((data, index) => (
             <div key={index} className="card">
-              <Card data={data} />
+              <Card data={data} source={source} destination={destination} />
             </div>
           ))}
         </DragDropContext>
