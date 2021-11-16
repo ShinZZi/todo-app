@@ -1,35 +1,44 @@
 import React from "react";
+import { Stack, Button } from "@mui/material/";
 import "./Header.css";
+import { Link } from "react-router-dom";
 
-function Header() {
+function Header(props) {
+  const Logout = () => {
+    sessionStorage.clear();
+  };
   return (
     <>
       <header className="header">
-        <div className="header__logo">TodoAPP</div>
+        <div className="header__logo">TodoApp</div>
         {/* Header Nav  */}
         <div className="header__nav">
-          <form className="formAdd" action="" method="">
-            <input
-              type="text"
-              className="form-control"
-              id="exampleFormControlInput1"
-              placeholder="Add new task. . ."
-            />
-            <button type="submit" className="btn btn-primary">
-              <i className="fas fa-plus"></i>
-            </button>
-          </form>
+          <Stack spacing={2} direction="row">
+            <Link style={{ textDecoration: "none" }} to="/main/add">
+              <Button
+                style={{
+                  fontSize: "1.3rem",
+                  fontFamily: "Poppins",
+                  backgroundColor: "#959ea7",
+                }}
+                variant="contained"
+              >
+                <i className="fas fa-plus icon"></i>
+                New Task
+              </Button>
+            </Link>
+          </Stack>
         </div>
         {/* /Header Nav */}
 
         <div className="header__ulties">
           <div className="header__ulties-tag">
-            <a href="/">
+            <a href="/" onClick={Logout}>
               <i className="fas fa-sign-out-alt icon"></i>Logout
             </a>
           </div>
           <div className="header__ulties-user">
-            <img src="./assets/img/zpld7rxcb831.jpg" alt="user-avt" />
+            <img src="./assets/img/avatar.jpg" alt="user-avt" />
           </div>
         </div>
       </header>
