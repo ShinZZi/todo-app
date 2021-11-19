@@ -1,48 +1,58 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { Stack, Button, Alert } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
 import { TaskService } from "../../services/taskService";
 import "./AddTask.css";
 
-function AddTask() {
-  const history = useNavigate();
-  const [logs, setLogs] = useState(null);
-  const usr = useRef(JSON.parse(sessionStorage["user"]));
+function AddTask(props) {
+  const { setIsAdd } = props;
+  const [logAdd, setLogAdd] = useState(null);
 
   const createNewTask = async (e) => {
     e.preventDefault();
+    const user = JSON.parse(sessionStorage["user"]);
     let taskName = document.getElementById("FormControlInput").value;
-    let status = await TaskService.createNewTask(usr.current.id, taskName);
-    if (status === 200) {
-      setLogs("success");
-      setTimeout(() => {
-        return history("/main");
-      }, 1000);
+    try {
+      let result = await TaskService.createNewTask(user.id, taskName);
+      if (result.statusText === "OK") {
+        setLogAdd("success");
+        setTimeout(() => {
+          setIsAdd(false);
+        }, 1000);
+      }
+    } catch (error) {
+      setLogAdd("error");
+      console.log(error);
     }
   };
   return (
     <div className="AddTask">
       <div className="form">
         <Stack spacing={2} direction="row">
-          <Link style={{ textDecoration: "none" }} to="/main">
-            <Button
-              style={{
-                marginBottom: "2rem",
-                fontSize: "1.3rem",
-                fontFamily: "Poppins",
-                backgroundColor: "#959ea7",
-              }}
-              variant="contained"
-            >
-              <i className="fas fa-chevron-left icon"></i>
-              BACK
-            </Button>
-          </Link>
+          <Button
+            style={{
+              marginBottom: "2rem",
+              fontSize: "1.3rem",
+              fontFamily: "Poppins",
+              backgroundColor: "#959ea7",
+            }}
+            variant="contained"
+            onClick={() => setIsAdd(false)}
+          >
+            <i className="fas fa-chevron-left icon"></i>
+            BACK
+          </Button>
         </Stack>
-        {logs === "success" ? (
+        {logAdd === "success" ? (
           <Stack sx={{ marginBottom: "1.5rem", width: "100%" }} spacing={2}>
             <Alert sx={{ fontSize: "1.6rem" }} severity="success">
               Add Success.
+            </Alert>
+          </Stack>
+        ) : null}
+        {logAdd === "error" ? (
+          <Stack sx={{ marginBottom: "1.5rem", width: "100%" }} spacing={2}>
+            <Alert sx={{ fontSize: "1.6rem" }} severity="error">
+              Add Unsuccess.
             </Alert>
           </Stack>
         ) : null}
@@ -61,11 +71,15 @@ function AddTask() {
           <Stack direction="row" spacing={2}>
             <Button
               onClick={createNewTask}
-              style={{ width: "15rem" }}
+              style={{
+                width: "15rem",
+                fontFamily: "Poppins",
+                fontSize: "1.1rem",
+              }}
               size="large"
               variant="outlined"
             >
-              Add Now
+              Add New
             </Button>
           </Stack>
         </div>

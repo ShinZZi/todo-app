@@ -1,115 +1,162 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { UserService } from "../../services/userService";
+import React, { useState, useEffect } from "react";
 import { Alert, Stack } from "@mui/material/";
+import { AuthService } from "../../services/authService";
+import axios from "axios";
+import "./Login.css";
+import { useNavigate } from "react-router";
 
 function Login() {
   const history = useNavigate();
-  const [logs, setLogs] = useState("");
+  const [logSignOut, setLogSignOut] = useState(null);
+  const [logSignIn, setLogSignIn] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
+    // IF USER IS LOGGED IN
     if (sessionStorage.length) {
-      let user = JSON.parse(sessionStorage["user"]);
-      UserService.getUser(user.name).then((response) => {
-        if (
-          response !== undefined &&
-          response.name === user.name &&
-          response.password === user.password
-        ) {
-          setLogs("success");
-          sessionStorage.setItem(
-            "user",
-            JSON.stringify({
-              id: response.id,
-              name: response.name,
-              password: response.password,
-            })
-          );
-          setTimeout(() => {
-            return history("/main");
-          }, 1000);
+      axios.defaults.headers.common["x-access-token"] = JSON.parse(
+        sessionStorage["user"]
+      ).accessToken;
+      // CHECK ACCESS TOKEN IS VALID OR NOT
+      AuthService.authenticate().then((res) => {
+        if (res.statusText === "OK") {
+          history("/main");
         } else {
-          setLogs("error");
           sessionStorage.clear();
         }
       });
     }
-  }, [history, logs]);
+  }, [history]);
 
-  const Login = () => {
-    let name = document.getElementById("typeUsernameX-2").value;
+  const Signup = async (e) => {
+    e.preventDefault();
+    let username = document.getElementById("typeUsernameX-1").value;
+    let password = document.getElementById("typePasswordX-1").value;
+    try {
+      let response = await AuthService.signup(username, password);
+      if (response.status === 200) {
+        setLogSignOut("success");
+      }
+    } catch (error) {
+      setLogSignOut("error");
+      console.log(error.response);
+    }
+  };
+
+  const Login = async (e) => {
+    e.preventDefault();
+    let username = document.getElementById("typeUsernameX-2").value;
     let password = document.getElementById("typePasswordX-2").value;
-    sessionStorage.setItem(
-      "user",
-      JSON.stringify({ name: name, password: password })
-    );
-    setLogs("pending");
+    try {
+      let response = await AuthService.signin(username, password);
+      if (response.status === 200) {
+        axios.defaults.headers.common["x-access-token"] =
+          response.data.accessToken;
+        sessionStorage.setItem(
+          "user",
+          JSON.stringify({
+            id: response.data.id,
+            name: username,
+            accessToken: response.data.accessToken,
+          })
+        );
+        setLogSignIn("success");
+        setTimeout(() => {
+          setIsLoggedIn(true);
+          history("/main");
+        }, 1000);
+      }
+    } catch (error) {
+      setLogSignIn("error");
+      console.log(error.response);
+    }
   };
 
   return (
     <>
-      <section className="vh-100" style={{ backgroundColor: "#2C3E50" }}>
-        <div className="container py-5 h-100">
-          <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col-12 col-md-8 col-lg-6 col-xl-5">
-              <div
-                className="card shadow-2-strong"
-                style={{ borderRadius: "1rem" }}
-              >
-                <div className="card-body p-5 text-center">
-                  <h3 className="mb-5">Sign in</h3>
-                  {logs === "error" ? (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert sx={{ fontSize: "1.6rem" }} severity="error">
-                        Login Fail !!
-                      </Alert>
-                    </Stack>
-                  ) : null}
-                  {logs === "success" ? (
-                    <Stack sx={{ width: "100%" }} spacing={2}>
-                      <Alert sx={{ fontSize: "1.6rem" }} severity="success">
-                        Login Success.
-                      </Alert>
-                    </Stack>
-                  ) : null}
-                  <div className="form-outline mt-4 mb-4">
-                    <label className="form-label" htmlFor="typeUsernameX-2">
-                      Username
-                    </label>
-                    <input
-                      type="text"
-                      id="typeUsernameX-2"
-                      className="form-control form-control-lg"
-                    />
-                  </div>
-                  <div className="form-outline mb-4">
-                    <label
-                      style={{ textAlign: "left" }}
-                      className="form-label"
-                      htmlFor="typePasswordX-2"
-                    >
-                      Password
-                    </label>
-                    <input
-                      type="password"
-                      id="typePasswordX-2"
-                      className="form-control form-control-lg"
-                    />
-                  </div>
-                  <button
-                    className="btn btn-primary btn-lg btn-block"
-                    type="submit"
-                    onClick={Login}
-                  >
-                    Login
-                  </button>
-                  <hr className="my-4" />
-                </div>
-              </div>
+      {isLoggedIn !== true ? (
+        <div className="section">
+          <div className="main">
+            <input type="checkbox" id="chk" aria-hidden="true" defaultChecked />
+
+            <div className="signup">
+              <>
+                <label htmlFor="chk" aria-hidden="true">
+                  Sign up
+                </label>
+                {logSignOut === "error" ? (
+                  <Stack sx={{ margin: "auto", width: "75%" }} spacing={2}>
+                    <Alert sx={{ fontSize: "1.6rem" }} severity="error">
+                      Register Fail !!
+                    </Alert>
+                  </Stack>
+                ) : null}
+                {logSignOut === "success" ? (
+                  <Stack sx={{ margin: "auto", width: "75%" }} spacing={2}>
+                    <Alert sx={{ fontSize: "1.6rem" }} severity="success">
+                      Register Success.
+                    </Alert>
+                  </Stack>
+                ) : null}
+                <input
+                  id="typeUsernameX-1"
+                  type="text"
+                  name="username"
+                  placeholder="User name"
+                  required=""
+                />
+                <input
+                  id="typePasswordX-1"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required=""
+                />
+                <button onClick={(e) => Signup(e)}>Sign up</button>
+              </>
+            </div>
+
+            <div className="login">
+              <>
+                <label htmlFor="chk" aria-hidden="true">
+                  Login
+                </label>
+                {logSignIn === "error" ? (
+                  <Stack sx={{ margin: "auto", width: "75%" }} spacing={2}>
+                    <Alert sx={{ fontSize: "1.6rem" }} severity="error">
+                      Login Fail !!
+                    </Alert>
+                  </Stack>
+                ) : null}
+                {logSignIn === "success" ? (
+                  <Stack sx={{ margin: "auto", width: "75%" }} spacing={2}>
+                    <Alert sx={{ fontSize: "1.6rem" }} severity="success">
+                      Login Success.
+                    </Alert>
+                  </Stack>
+                ) : null}
+                <input
+                  id="typeUsernameX-2"
+                  type="text"
+                  name="username"
+                  placeholder="Username"
+                  required=""
+                />
+                <input
+                  id="typePasswordX-2"
+                  type="password"
+                  name="password"
+                  placeholder="Password"
+                  required=""
+                />
+                <button onClick={(e) => Login(e)} type="submit">
+                  Login
+                </button>
+              </>
             </div>
           </div>
         </div>
-      </section>
+      ) : null}
     </>
   );
 }

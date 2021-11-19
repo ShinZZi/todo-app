@@ -1,42 +1,38 @@
 import { CardSetService } from "./cardsetService";
 import { CardService } from "./cardService";
 import axios from "axios";
-import { v4 } from "uuid";
-const API_URI = "http://127.0.0.1:9999";
+import { API_URI } from "../config/api.config";
 
 export const TaskService = {
-  createNewTask: (user_id, taskName) => {
-    CardSetService.getCardSetByUserID(user_id).then((cardset) => {
-      CardService.getTodoCard(cardset.id).then(async (todoCard) => {
-        // console.log(todoCard.id);
-        let response = await axios.get(`${API_URI}/task/card/${todoCard.id}`);
-        let tasks = response.data;
-        await axios.post(`${API_URI}/task/add`, {
-          id: v4(),
-          name: taskName,
-          card_id: todoCard.id,
-          index: tasks.length + 1,
-        });
-      });
+  createNewTask: async (user_id, taskName) => {
+    let cardset = await CardSetService.getCardSetByUserID(user_id);
+    let todoCard = await CardService.getTodoCard(cardset.id);
+    // GET TASKS TO COUNT LENGTH
+    let tasks = await (
+      await axios.get(`${API_URI}/api/task/card/${todoCard.id}`)
+    ).data;
+
+    let result = axios.post(`${API_URI}/api/task/add`, {
+      index: tasks.length,
+      name: taskName,
+      card_id: todoCard.id,
     });
-    return 200;
+    return result;
   },
   getTaskByCardID: async (card_id) => {
-    let response = await axios.get(`${API_URI}/task/card/${card_id}`);
+    let response = await axios.get(`${API_URI}/api/task/card/${card_id}`);
     return response.data;
   },
-
   updateTask: async (item, index, destination) => {
-    let response = await axios.put(`${API_URI}/task/update/${item.id}`, {
-      card_id: destination.droppableId,
+    let response = await axios.put(`${API_URI}/api/task/update/${item.id}`, {
       index: index,
       name: item.name,
+      card_id: destination.droppableId,
     });
     return response;
   },
-
   deleteTask: async (id) => {
-    let response = await axios.delete(`${API_URI}/task/del/${id}`);
-    return response.data;
+    let response = await axios.delete(`${API_URI}/api/task/delete/${id}`);
+    return response;
   },
 };

@@ -8,7 +8,6 @@ import {
 import "./App.css";
 import Login from "./pages/Login/Login";
 import Main from "./pages/Main/Main";
-import AddTask from "./pages/AddTask/AddTask";
 
 function App() {
   return (
@@ -17,8 +16,7 @@ function App() {
         <Routes>
           <Route exact path="/login" element={<Login />} />
           <Route exact path="/main" element={<Main />} />
-          <Route exact path="/main/add" element={<AddTask />} />
-          <Route exact path="/" element={<Navigate to="/login" />} />
+          <Route exact path="/" element={<Navigate to="/main" />} />
         </Routes>
       </Router>
     </div>
