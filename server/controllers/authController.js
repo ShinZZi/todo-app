@@ -22,7 +22,7 @@ exports.signin = (req, res) => {
   User.findOne({ where: { name: req.body.name } })
     .then((user) => {
       if (!user) return res.status(404).send({ message: "User not found" });
-
+      console.log(user);
       var passwordIsValid = bcrypt.compareSync(
         req.body.password,
         user.password
