@@ -35,15 +35,14 @@ function Main() {
             // GET DATA WHEN RENDER VIEW
             CardSetService.getCardSetByUserID(user.id).then((cardSet) => {
               CardService.getCardByCardSetID(cardSet.id).then((cards) => {
-                console.log(cards);
-                // setData(
-                //   cards.map((card) => {
-                //     TaskService.getTaskByCardID(card.id).then((task) => {
-                //       card["items"] = task;
-                //     });
-                //     return card;
-                //   })
-                // );
+                setData(
+                  cards.map((card) => {
+                    TaskService.getTaskByCardID(card.id).then((task) => {
+                      card["items"] = task;
+                    });
+                    return card;
+                  })
+                );
               });
             });
           } else {
