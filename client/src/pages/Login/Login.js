@@ -34,7 +34,7 @@ function Login() {
     let password = document.getElementById("typePasswordX-1").value;
     try {
       let response = await AuthService.signup(username, password);
-      if (response.status === 200) {
+      if (response.status === 200 && response !== undefined) {
         setLogSignOut("success");
       }
     } catch (error) {
@@ -49,7 +49,7 @@ function Login() {
     let password = document.getElementById("typePasswordX-2").value;
     try {
       let response = await AuthService.signin(username, password);
-      if (response.status === 200) {
+      if (response.status === 200 && response !== undefined) {
         axios.defaults.headers.common["x-access-token"] =
           response.data.accessToken;
         sessionStorage.setItem(

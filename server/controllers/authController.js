@@ -32,7 +32,7 @@ exports.signin = (req, res) => {
           .send({ accessToken: null, message: "Invalid password" });
       } else {
         var token = jwt.sign({ id: user.id }, config.secret, {
-          expiresIn: "15m",
+          expiresIn: "40m",
         });
         res.status(200).send({
           id: user.id,
