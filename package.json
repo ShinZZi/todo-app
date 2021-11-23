@@ -28,7 +28,7 @@
     "eject": "react-scripts eject",
     "dev": "npm run start & (cd server && npm run dev)"
   },
-  "proxy": "http://localhost:9999",
+  "proxy": "https://todo-app-dnd.herokuapp.com",
   "eslintConfig": {
     "extends": [
       "react-app",
