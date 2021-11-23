@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require("path");
 
 const cors = require("cors");
 require("dotenv").config();
@@ -16,6 +17,11 @@ app.use(
     extended: false,
   })
 );
+
+app.use(express.static(path.resolve(__dirname, "../client/build")));
+app.use("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "../client/build", index.html));
+});
 
 // _______________________ CONNECT DATABASE _______________________ //
 const db = require("./models/index");
