@@ -4,7 +4,7 @@
   display: flex;
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
-  justify-content: space-between;
+  /* justify-content: space-between; */
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
@@ -15,4 +15,16 @@
 .clearfix {
   height: 1.8rem;
   width: 100%;
+}
+
+#textField {
+  font-size: 1.6rem;
+  color: #212529;
+  letter-spacing: 0;
+  line-height: 2.4rem;
+  font-family: "Poppins", sans-serif;
+}
+
+.dragElements {
+  margin-left: auto;
 }

@@ -39,3 +39,7 @@
   top: 0;
   margin-bottom: 1rem;
 }
+
+.card-task.completed {
+  text-decoration: line-through;
+}

@@ -17,8 +17,9 @@ function Main() {
   const [data, setData] = useState([]);
   const [source, setSource] = useState(null);
   const [destination, setDestination] = useState(null);
-  const [deleteTask, setDeleteTask] = useState(false);
+  const [isDeleteTask, setIsDeleteTask] = useState(false);
   const [isAdd, setIsAdd] = useState(false);
+  const [isUpdateTask, setIsUpdateTask] = useState(false);
 
   useEffect(() => {
     // CHECK IF USER LOGGED IN OR NOT
@@ -55,9 +56,9 @@ function Main() {
         });
     }
     return () => {
-      setDeleteTask(false);
+      setIsDeleteTask(false);
     };
-  }, [history, deleteTask, isAdd]);
+  }, [history, isDeleteTask, isAdd, isUpdateTask]);
 
   const onDragEnd = async ({ destination, source }) => {
     if (!destination) return;
@@ -110,10 +111,11 @@ function Main() {
                 {data.map((data, index) => (
                   <div key={index} className="card">
                     <Card
-                      setDeleteTask={() => setDeleteTask()}
+                      setIsDeleteTask={setIsDeleteTask}
                       data={data}
                       source={source}
                       destination={destination}
+                      setIsUpdateTask={setIsUpdateTask}
                     />
                   </div>
                 ))}

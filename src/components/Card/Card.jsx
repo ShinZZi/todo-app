@@ -8,7 +8,7 @@ import CloseIcon from "@mui/icons-material/Close";
 import { TaskService } from "../../services/taskService";
 
 function Card(props) {
-  const { setDeleteTask } = props;
+  const { setIsDeleteTask, setIsUpdateTask } = props;
   const { data, destination, source } = props;
   const [card, setCard] = useState([]);
   const [isEdit, setIsEdit] = useState(false);
@@ -41,7 +41,6 @@ function Card(props) {
       }
     }
   }, [card, source, destination]);
-
   return (
     <>
       <div className="card-title">
@@ -71,9 +70,16 @@ function Card(props) {
                 {...provided.droppableProps}
               >
                 {card.items.map((item, index) => (
-                  <div key={index} className="card-task">
+                  <div
+                    key={index}
+                    className={
+                      "card-task " +
+                      (card.title === "Completed" ? "completed" : "")
+                    }
+                  >
                     <Task
-                      setDeleteTask={setDeleteTask}
+                      setIsUpdateTask={setIsUpdateTask}
+                      setIsDeleteTask={setIsDeleteTask}
                       isEdit={isEdit}
                       item={item}
                       index={index}
